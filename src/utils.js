@@ -20,9 +20,9 @@ export const sCasesTime = (infections) => parseInt(infections * 0.15, 10);
 
 export const getBeds = (cases, total) => (parseInt(0.35 * total, 10) - cases) + 1;
 
-export const casesICU = (infected) => infected * 0.05;
+export const casesICU = (infected) => parseInt(infected * 0.05, 10);
 
-export const casesVent = (infected) => infected * 0.02;
+export const casesVent = (infected) => parseInt(infected * 0.02, 10);
 
 export const dailyLoss = (
   infected, inc, incomePop
