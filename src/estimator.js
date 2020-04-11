@@ -62,10 +62,10 @@ const covid19ImpactEstimator = (data) => {
   );
 
   // casesForVentilatorsByRequestedTime
-  impact.casesForICUByRequestedTime = casesVent(
+  impact.casesForVentilatorsByRequestedTime = casesVent(
     impact.infectionsByRequestedTime
   );
-  severeImpact.casesForICUByRequestedTime = casesVent(
+  severeImpact.casesForVentilatorsByRequestedTime = casesVent(
     severeImpact.infectionsByRequestedTime
   );
 
