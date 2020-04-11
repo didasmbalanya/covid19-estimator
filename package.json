@@ -8,9 +8,10 @@
     "lint": "eslint ./src/",
     "estimator": "nodemon --exec babel-node src/estimator.js",
     "dev": "nodemon --exec babel-node src/app.js",
+    "random": "nodemon --exec babel-node src/random.js",
     "build": "rm -rf dist && mkdir dist && babel src -s -d dist",
-    "heroku-postbuild":"yarn build",
-    "start":"node dist/app.js"
+    "heroku-postbuild": "yarn build",
+    "start": "node dist/app.js"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
@@ -21,6 +22,7 @@
     "on-covid-19": "^0.1.3",
     "xml2js": "^0.4.23"
   },
+  "node-fetch": "^2.6.0",
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.0",

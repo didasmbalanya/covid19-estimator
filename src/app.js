@@ -34,7 +34,8 @@ app.get('/api/v1/on-covid-19/logs', (req, res) => {
   try {
     fs.readFile(filePath, 'utf8', (err, data) => {
       if (err) throw err;
-      return res.set('Content-Type', 'application/text').send(data);
+      // return res.set('Content-Type', 'text/html').send(data);
+      return res.send(data);
     });
   } catch (error) {
     res.sendStatus(500).send({ error: 'something went wrong on the server' });
