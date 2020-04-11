@@ -18,7 +18,7 @@ export const iBTime = (cInfected, days) => cInfected * 2 ** parseInt(days / 3, 1
 // get severe cases for the reqeusted time
 export const sCasesTime = (infections) => parseInt(infections * 0.15, 10);
 
-export const getBeds = (cases, total) => (parseInt(0.35 * total, 10) - cases) + 1;
+export const getBeds = (cases, total) => (parseInt(0.35 * total, 10) - cases);
 
 export const casesICU = (infected) => parseInt(infected * 0.05, 10);
 
