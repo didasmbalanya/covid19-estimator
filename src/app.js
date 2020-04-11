@@ -43,20 +43,34 @@ app.get('/api/v1/on-covid-19/logs', (req, res) => {
 
 app.post('/api/v1/on-covid-19/:fomart?', (req, res) => {
   const { fomart } = req.params;
-  const { data } = req.body;
+  const {
+    region,
+    periodType,
+    timeToElapse,
+    reportedCases,
+    population,
+    totalHospitalBeds
+  } = req.body;
+
+  const data = {
+    region,
+    periodType,
+    timeToElapse,
+    reportedCases,
+    population,
+    totalHospitalBeds
+  };
+
   try {
     const result = covid19ImpactEstimator(data);
 
-    if (fomart.toLowerCase() === 'xml') {
+    if (fomart && fomart.toLowerCase() === 'xml') {
       const builder = new xml2js.Builder();
       const xml = builder.buildObject(result);
       res.set('Content-Type', 'text/xml');
       return res.status(200).send(xml);
     }
-    return res.status(200).send({
-      message: 'You will get a response in json',
-      data: result
-    });
+    return res.status(200).send(result);
   } catch (error) {
     return res.status(500).send({
       error: 'Something went wrong'
