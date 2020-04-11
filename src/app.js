@@ -34,7 +34,7 @@ app.get('/api/v1/on-covid-19/logs', (req, res) => {
   try {
     fs.readFile(filePath, 'utf8', (err, data) => {
       if (err) throw err;
-      return res.set('Content-Type', 'text/plain').send(data);
+      return res.set('Content-Type', 'application/text').send(data);
     });
   } catch (error) {
     res.sendStatus(500).send({ error: 'something went wrong on the server' });
@@ -68,7 +68,7 @@ app.post('/api/v1/on-covid-19/:fomart?', (req, res) => {
       const builder = new xml2js.Builder();
       const xml = builder.buildObject(result);
 
-      res.set('Content-Type', 'text/xml');
+      res.set('Content-Type', 'application/xml');
       return res.status(200).send(xml);
     }
     return res.status(200).send(result);
