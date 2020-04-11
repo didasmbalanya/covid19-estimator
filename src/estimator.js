@@ -14,7 +14,6 @@ const covid19ImpactEstimator = (data) => {
   const impact = {};
   const severeImpact = {};
 
-  // configs
   const {
     reportedCases,
     timeToElapse,

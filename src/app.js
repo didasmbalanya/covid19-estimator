@@ -67,13 +67,14 @@ app.post('/api/v1/on-covid-19/:fomart?', (req, res) => {
     if (fomart && fomart.toLowerCase() === 'xml') {
       const builder = new xml2js.Builder();
       const xml = builder.buildObject(result);
+
       res.set('Content-Type', 'text/xml');
       return res.status(200).send(xml);
     }
     return res.status(200).send(result);
   } catch (error) {
     return res.status(500).send({
-      error: 'Something went wrong'
+      error: 'Something went wrong!'
     });
   }
 });
