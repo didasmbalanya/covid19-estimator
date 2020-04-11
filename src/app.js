@@ -15,11 +15,10 @@ const filePath = path.join(__dirname, 'access.log');
 
 app.use(helmet());
 
-// create a write stream (in append mode)
 const accessLogStream = fs.createWriteStream(filePath, { flags: 'a' });
 
 app.use(
-  morgan(':method   :url    :status   :response-time    ms ', {
+  morgan(':method\t\t:url\t\t:status\t\t:response-time\t\tms', {
     stream: accessLogStream
   })
 );
@@ -35,7 +34,7 @@ app.get('/api/v1/on-covid-19/logs', (req, res) => {
   try {
     fs.readFile(filePath, 'utf8', (err, data) => {
       if (err) throw err;
-      res.send(data);
+      return res.set('Content-Type', 'text/plain').send(data);
     });
   } catch (error) {
     res.sendStatus(500).send({ error: 'something went wrong on the server' });
@@ -48,7 +47,7 @@ app.post('/api/v1/on-covid-19/:fomart?', (req, res) => {
   try {
     const result = covid19ImpactEstimator(data);
 
-    if (fomart === 'xml') {
+    if (fomart.toLowerCase() === 'xml') {
       const builder = new xml2js.Builder();
       const xml = builder.buildObject(result);
       res.set('Content-Type', 'text/xml');
