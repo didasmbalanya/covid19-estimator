@@ -3,10 +3,11 @@ import {
   sCasesTime,
   getBeds,
   getInfectedImpact,
-  iBTime
+  iBTime,
+  casesICU,
+  casesVent,
+  dailyLoss
 } from './utils';
-
-// import { data as data2 } from './test';
 
 const covid19ImpactEstimator = (data) => {
   const originalData = { ...data };
@@ -15,7 +16,11 @@ const covid19ImpactEstimator = (data) => {
 
   // configs
   const {
-    reportedCases, timeToElapse, periodType, totalHospitalBeds
+    reportedCases,
+    timeToElapse,
+    periodType,
+    totalHospitalBeds,
+    region: { avgDailyIncomeInUSD, avgDailyIncomePopulation }
   } = data;
   const days = toDays(timeToElapse, periodType);
 
@@ -48,13 +53,39 @@ const covid19ImpactEstimator = (data) => {
     totalHospitalBeds
   );
 
+  // casesForICUByRequestedTime
+  impact.casesForICUByRequestedTime = casesICU(
+    impact.infectionsByRequestedTime
+  );
+  severeImpact.casesForICUByRequestedTime = casesICU(
+    severeImpact.infectionsByRequestedTime
+  );
+
+  // casesForVentilatorsByRequestedTime
+  impact.casesForICUByRequestedTime = casesVent(
+    impact.infectionsByRequestedTime
+  );
+  severeImpact.casesForICUByRequestedTime = casesVent(
+    severeImpact.infectionsByRequestedTime
+  );
+
+  // dollarsInFlight
+  impact.dollarsInFlight = dailyLoss(
+    impact.infectionsByRequestedTime,
+    avgDailyIncomeInUSD,
+    avgDailyIncomePopulation
+  );
+  severeImpact.dollarsInFlight = dailyLoss(
+    severeImpact.infectionsByRequestedTime,
+    avgDailyIncomeInUSD,
+    avgDailyIncomePopulation
+  );
+
   return {
     data: originalData,
     impact,
     severeImpact
   };
 };
-
-// console.log(covid19ImpactEstimator(data2));
 
 export default covid19ImpactEstimator;
