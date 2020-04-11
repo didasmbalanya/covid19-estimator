@@ -1,6 +1,4 @@
-const getInfectedImpact = (reportedCases, caseValue) => {
-  parseInt(reportedCases * caseValue, 10);
-};
+const getInfectedImpact = (rc, caseValue) => parseInt(rc * caseValue, 10);
 
 // convert period to days
 const toDays = (period, periodType) => {
@@ -40,5 +38,6 @@ const covid19ImpactEstimator = (data) => {
     }
   };
 };
+
 
 export default covid19ImpactEstimator;
