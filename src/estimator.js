@@ -1,22 +1,12 @@
-const getInfectedImpact = (rc, caseValue) => parseInt(rc * caseValue, 10);
+import {
+  toDays,
+  sCasesTime,
+  getBeds,
+  getInfectedImpact,
+  iBTime
+} from './utils';
 
-// convert period to days
-const toDays = (period, periodType) => {
-  const pt = periodType.toLowerCase();
-  if (pt === 'months' || pt === 'month') {
-    return period * 30;
-  }
-  if (pt === 'weeks' || pt === 'week') {
-    return period * 7;
-  }
-  return period;
-};
-
-// calc for infectionsByRequestedTime
-const iBTime = (cInfected, days) => cInfected * 2 ** parseInt(days / 3, 10);
-
-// get severe cases for the reqeusted time
-// const sCasesTime = (infections) => infections * 0.15;
+// import { data as data2 } from './test';
 
 const covid19ImpactEstimator = (data) => {
   const originalData = { ...data };
@@ -24,7 +14,9 @@ const covid19ImpactEstimator = (data) => {
   const severeImpact = {};
 
   // configs
-  const { reportedCases, timeToElapse, periodType } = data;
+  const {
+    reportedCases, timeToElapse, periodType, totalHospitalBeds
+  } = data;
   const days = toDays(timeToElapse, periodType);
 
   // currentlyInfected
@@ -38,11 +30,31 @@ const covid19ImpactEstimator = (data) => {
     days
   );
 
+  // severeCasesByRequestedTime
+  impact.severeCasesByRequestedTime = sCasesTime(
+    impact.infectionsByRequestedTime
+  );
+  severeImpact.severeCasesByRequestedTime = sCasesTime(
+    severeImpact.infectionsByRequestedTime
+  );
+
+  // hospitalBedsByRequestedTime
+  impact.hospitalBedsByRequestedTime = getBeds(
+    impact.severeCasesByRequestedTime,
+    totalHospitalBeds
+  );
+  severeImpact.hospitalBedsByRequestedTime = getBeds(
+    severeImpact.severeCasesByRequestedTime,
+    totalHospitalBeds
+  );
+
   return {
     data: originalData,
     impact,
     severeImpact
   };
 };
+
+// console.log(covid19ImpactEstimator(data2));
 
 export default covid19ImpactEstimator;
