@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import fs from 'fs';
 import path from 'path';
-import xml from 'xml';
+import xml2js from 'xml2js';
 import covid19ImpactEstimator from './estimator';
 
 require('dotenv').config();
@@ -45,16 +45,24 @@ app.get('/api/v1/on-covid-19/logs', (req, res) => {
 app.post('/api/v1/on-covid-19/:fomart?', (req, res) => {
   const { fomart } = req.params;
   const { data } = req.body;
-  const result = covid19ImpactEstimator(data);
+  try {
+    const result = covid19ImpactEstimator(data);
 
-  if (fomart === 'xml') {
-    res.set('Content-Type', 'text/xml');
-    return res.send(xml(result));
+    if (fomart === 'xml') {
+      const builder = new xml2js.Builder();
+      const xml = builder.buildObject(result);
+      res.set('Content-Type', 'text/xml');
+      return res.status(200).send(xml);
+    }
+    return res.status(200).send({
+      message: 'You will get a response in json',
+      data: result
+    });
+  } catch (error) {
+    return res.status(500).send({
+      error: 'Something went wrong'
+    });
   }
-  return res.status(200).send({
-    message: 'You will get a response in json',
-    data: result
-  });
 });
 
 app.listen(port, () => {
