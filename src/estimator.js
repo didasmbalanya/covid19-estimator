@@ -15,29 +15,34 @@ const toDays = (period, periodType) => {
 // calc for infectionsByRequestedTime
 const iBTime = (cInfected, days) => cInfected * 2 ** parseInt(days / 3, 10);
 
+// get severe cases for the reqeusted time
+// const sCasesTime = (infections) => infections * 0.15;
+
 const covid19ImpactEstimator = (data) => {
   const originalData = { ...data };
+  const impact = {};
+  const severeImpact = {};
 
   // configs
   const { reportedCases, timeToElapse, periodType } = data;
   const days = toDays(timeToElapse, periodType);
 
   // currentlyInfected
-  const currentlyInfectedImpact = getInfectedImpact(reportedCases, 10);
-  const currentlyInfectedSevere = getInfectedImpact(reportedCases, 50);
+  impact.currentlyInfected = getInfectedImpact(reportedCases, 10);
+  severeImpact.currentlyInfected = getInfectedImpact(reportedCases, 50);
+
+  // //infected by time requested
+  impact.infectionsByRequestedTime = iBTime(impact.currentlyInfected, days);
+  severeImpact.infectionsByRequestedTime = iBTime(
+    severeImpact.currentlyInfected,
+    days
+  );
 
   return {
     data: originalData,
-    impact: {
-      currentlyInfected: currentlyInfectedImpact,
-      infectionsByRequestedTime: iBTime(currentlyInfectedImpact, days)
-    },
-    severeImpact: {
-      currentlyInfected: currentlyInfectedSevere,
-      infectionsByRequestedTime: iBTime(currentlyInfectedSevere, days)
-    }
+    impact,
+    severeImpact
   };
 };
-
 
 export default covid19ImpactEstimator;
