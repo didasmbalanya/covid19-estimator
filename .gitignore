@@ -1,3 +1,7 @@
+random.js
+test.js
+*.rest
+
 # Logs
 logs
 *.log
