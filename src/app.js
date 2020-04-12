@@ -18,7 +18,7 @@ app.use(helmet());
 const accessLogStream = fs.createWriteStream(filePath, { flags: 'a' });
 
 app.use(
-  morgan(':method\t\t:url\t\t:status\t\t:response-time\t\tms', {
+  morgan(':method\t\t:url\t\t:status\t\t:response-time\bms\n', {
     stream: accessLogStream
   })
 );
