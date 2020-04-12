@@ -7,11 +7,11 @@
   "scripts": {
     "lint": "eslint ./src/",
     "estimator": "nodemon --exec babel-node src/estimator.js",
-    "dev": "rm -f src/access.log && nodemon --exec babel-node src/app.js",
+    "dev": "nodemon --exec babel-node src/app.js",
     "random": "nodemon --exec babel-node src/random.js",
     "build": "rm -rf dist && mkdir dist && babel src -s -d dist",
     "heroku-postbuild": "yarn build",
-    "start": "rm -f src/access.log && node dist/app.js"
+    "start": "node dist/app.js"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
