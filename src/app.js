@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import express from 'express';
 import helmet from 'helmet';
 import bodyParser from 'body-parser';
@@ -17,8 +18,26 @@ app.use(helmet());
 
 const accessLogStream = fs.createWriteStream(filePath, { flags: 'a' });
 
+morgan.token('total-time', (req, res, digits) => {
+  if (!req._startAt || !res._startAt) {
+    // missing request and/or response start time
+    return;
+  }
+
+  // time elapsed from request start
+  const elapsed = process.hrtime(req._startAt);
+
+  // cover to milliseconds
+  const ms = (elapsed[0] * 1e3) + (elapsed[1] * 1e-6);
+  const time = ms.toFixed(digits === undefined ? 3 : digits);
+
+  // return truncated value
+  // eslint-disable-next-line consistent-return
+  return time.toString().padStart(2, 0);
+});
+
 app.use(
-  morgan(':method\t\t:url\t\t:status\t\t:response-time\bms\n', {
+  morgan(':method   :url    :status   :total-time[0]ms\n', {
     stream: accessLogStream
   })
 );
@@ -34,7 +53,7 @@ app.get('/api/v1/on-covid-19/logs', (req, res) => {
   try {
     fs.readFile(filePath, 'utf8', (err, data) => {
       if (err) throw err;
-      return res.set('Content-Type', 'text/plain').send(data);
+      return res.set('Content-Type', 'text/plain').status(200).send(data);
     });
   } catch (error) {
     res.sendStatus(500).send({ error: 'something went wrong on the server' });
